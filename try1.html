@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Masaüstüm</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --taskbar-h: 56px;
+    --glass: rgba(255,255,255,0.12);
+    --glass-border: rgba(255,255,255,0.22);
+    --text: #fff;
+    --text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    background: #1a3a5c;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Wallpaper */
+  #wallpaper {
+    position: fixed; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse at 20% 80%, #0f3460 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 20%, #16213e 0%, transparent 55%),
+      linear-gradient(135deg, #0a1628 0%, #1a3a5c 40%, #0a1628 100%);
+    transition: background 0.5s ease;
+  }
+  #wallpaper::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 10%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 55%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 88% 30%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 20% 70%, rgba(255,255,255,0.15) 0%, transparent 100%),
+      radial-gradient(2px 2px at 60% 80%, rgba(255,255,255,0.12) 0%, transparent 100%);
+  }
+
+  /* Desktop */
+  #desktop {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    bottom: var(--taskbar-h);
+    z-index: 1;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 6px;
+    overflow: hidden;
+  }
+
+  /* Icons */
+  .icon {
+    width: 80px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 5px;
+    cursor: pointer;
+    padding: 8px 4px;
+    border-radius: 11px;
+    border: 1px solid transparent;
+    transition: background 0.14s, border-color 0.14s, transform 0.1s;
+    text-decoration: none;
+    animation: iconIn 0.35s ease both;
+    position: relative;
+  }
+  @keyframes iconIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.88); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .icon:hover { background: rgba(255,255,255,0.14); border-color: var(--glass-border); }
+  .icon:active { transform: scale(0.92); }
+
+  .icon-img {
+    width: 52px; height: 52px;
+    border-radius: 13px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    transition: transform 0.14s, box-shadow 0.14s;
+    flex-shrink: 0;
+  }
+  .icon:hover .icon-img { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+
+  .icon-label {
+    font-size: 11px; font-weight: 500;
+    color: var(--text); text-shadow: var(--text-shadow);
+    text-align: center; line-height: 1.3;
+    max-width: 72px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* Delete badge */
+  .del-btn {
+    display: none;
+    position: absolute; top: 1px; right: 1px;
+    width: 19px; height: 19px;
+    border-radius: 50%;
+    background: #ef4444; color: #fff;
+    font-size: 11px; font-weight: 700;
+    align-items: center; justify-content: center;
+    cursor: pointer; z-index: 10;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    line-height: 1;
+  }
+  body.edit-mode .del-btn { display: flex; }
+  body.edit-mode .icon { animation: wiggle 0.55s ease infinite alternate; }
+  @keyframes wiggle {
+    from { transform: rotate(-1.8deg) scale(1); }
+    to   { transform: rotate(1.8deg) scale(1); }
+  }
+
+  /* Taskbar */
+  #taskbar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--taskbar-h);
+    background: rgba(8,18,36,0.80);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    z-index: 100;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 0 12px; gap: 8px;
+  }
+
+  #start-btn {
+    display: flex; align-items: center; gap: 7px;
+    padding: 7px 11px; border-radius: 9px;
+    cursor: pointer; border: 1px solid transparent;
+    transition: background 0.14s, border-color 0.14s;
+    color: #fff; font-size: 13px; font-weight: 600;
+    background: transparent; white-space: nowrap; flex-shrink: 0;
+  }
+  #start-btn:hover { background: var(--glass); border-color: var(--glass-border); }
+  #start-btn:active { background: rgba(255,255,255,0.2); }
+  #start-btn .logo { font-size: 17px; }
+
+  #dock {
+    display: flex; align-items: center; gap: 5px;
+    overflow-x: auto; scrollbar-width: none;
+    flex: 1; justify-content: center;
+  }
+  #dock::-webkit-scrollbar { display: none; }
+
+  .dock-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; cursor: pointer; flex-shrink: 0;
+    transition: transform 0.14s, box-shadow 0.14s;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .dock-icon:hover { transform: translateY(-4px) scale(1.12); box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+  .dock-icon:active { transform: scale(0.88); }
+
+  #taskbar-right {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: rgba(255,255,255,0.85);
+    font-weight: 500; flex-shrink: 0; letter-spacing: 0.3px;
+  }
+  #date-disp { display: none; }
+  @media (min-width: 420px) { #date-disp { display: block; } }
+
+  /* Start Menu */
+  #start-menu {
+    position: fixed;
+    bottom: calc(var(--taskbar-h) + 8px); left: 10px;
+    width: min(286px, calc(100vw - 20px));
+    background: rgba(8,18,36,0.95);
+    backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 16px; padding: 15px;
+    z-index: 200; display: none;
+    max-height: calc(100vh - var(--taskbar-h) - 20px);
+    overflow-y: auto; scrollbar-width: thin;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+  }
+  #start-menu.open { display: block; animation: menuIn 0.17s ease; }
+  @keyframes menuIn {
+    from { opacity:0; transform: translateY(8px) scale(0.97); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+  #start-menu h3 {
+    color: rgba(255,255,255,0.42); font-size: 10px;
+    font-weight: 600; letter-spacing: 1.2px;
+    text-transform: uppercase; margin-bottom: 7px;
+  }
+  .menu-item {
+    display: flex; align-items: center; gap: 11px;
+    padding: 8px 9px; border-radius: 9px; cursor: pointer;
+    text-decoration: none; color: #fff;
+    font-size: 13.5px; font-weight: 500;
+    transition: background 0.11s;
+  }
+  .menu-item:hover, .menu-item:active { background: rgba(255,255,255,0.1); }
+  .mi-icon {
+    width: 29px; height: 29px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+  }
+
+  /* Context Menu */
+  #ctx-menu {
+    position: fixed;
+    background: rgba(8,18,36,0.97);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 11px; padding: 6px;
+    z-index: 300; display: none;
+    min-width: 192px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  }
+  #ctx-menu.open { display: block; animation: ctxIn 0.12s ease; }
+  @keyframes ctxIn { from { opacity:0; transform: scale(0.95); } to { opacity:1; transform: scale(1); } }
+  .ctx-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 12px; border-radius: 7px;
+    cursor: pointer; color: #fff;
+    font-size: 13px; font-weight: 500;
+    transition: background 0.1s;
+  }
+  .ctx-item:hover { background: rgba(255,255,255,0.11); }
+  .ctx-sep { height: 1px; background: rgba(255,255,255,0.1); margin: 4px 0; }
+
+  /* FAB */
+  #fab {
+    display: none; position: fixed;
+    bottom: calc(var(--taskbar-h) + 14px); right: 14px;
+    width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #fff; font-size: 26px;
+    align-items: center; justify-content: center;
+    cursor: pointer; z-index: 90;
+    box-shadow: 0 4px 18px rgba(59,130,246,0.55);
+    border: none; transition: transform 0.14s;
+  }
+  #fab:active { transform: scale(0.88); }
+  @media (max-width: 600px) { #fab { display: flex; } }
+
+  /* Modal overlays */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 400; display: none;
+    align-items: flex-end; justify-content: center;
+    backdrop-filter: blur(5px);
+  }
+  .modal-overlay.open { display: flex; }
+  @media (min-width: 500px) { .modal-overlay { align-items: center; } }
+
+  .modal-box {
+    background: rgba(8,18,40,0.98);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 22px 22px 0 0;
+    padding: 10px 20px 36px;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 -10px 50px rgba(0,0,0,0.65);
+    animation: slideUp 0.22s ease;
+    max-height: 92vh; overflow-y: auto;
+  }
+  @media (min-width: 500px) {
+    .modal-box { border-radius: 18px; padding: 28px 24px; animation: modalIn 0.2s ease; }
+  }
+  @keyframes slideUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes modalIn { from { opacity:0; transform:scale(0.93) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
+
+  .drag-handle {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,0.2); border-radius: 2px;
+    margin: 8px auto 18px;
+  }
+  @media (min-width: 500px) { .drag-handle { display: none; } }
+
+  .modal-box h2 { color:#fff; font-size:17px; font-weight:600; margin-bottom:18px; }
+
+  .field { margin-bottom: 14px; }
+  .field label {
+    display:block; color: rgba(255,255,255,0.48);
+    font-size:10.5px; font-weight:600; letter-spacing:0.9px;
+    text-transform:uppercase; margin-bottom:6px;
+  }
+  .field input, .field select {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 9px; padding: 10px 13px;
+    color: #fff; font-family: 'Inter', sans-serif;
+    font-size: 14px; outline: none;
+    transition: border-color 0.14s;
+  }
+  .field input:focus, .field select:focus { border-color: rgba(100,160,255,0.55); }
+  .field select option { background: #0a1628; }
+
+  .emoji-grid {
+    display: grid; grid-template-columns: repeat(8, 1fr);
+    gap: 4px; margin-top: 4px;
+  }
+  .emoji-pick {
+    width: 100%; aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; border-radius: 6px; cursor: pointer;
+    border: 1.5px solid transparent; transition: background 0.1s;
+  }
+  .emoji-pick:hover { background: rgba(255,255,255,0.11); }
+  .emoji-pick.selected { border-color: rgba(100,160,255,0.65); background: rgba(100,160,255,0.14); }
+
+  .modal-actions { display:flex; gap:10px; margin-top:20px; }
+  .btn {
+    flex:1; padding:11px; border-radius:10px; border:none;
+    cursor:pointer; font-family:'Inter',sans-serif;
+    font-size:14px; font-weight:600;
+    transition: opacity 0.14s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn-primary { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color:#fff; }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-cancel { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.68); }
+  .btn-cancel:hover { background: rgba(255,255,255,0.13); }
+
+  .wp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+  .wp-opt {
+    height: 66px; border-radius: 10px; cursor: pointer;
+    border: 2.5px solid transparent;
+    transition: border-color 0.14s, transform 0.12s;
+  }
+  .wp-opt:hover { transform: scale(1.04); }
+  .wp-opt.selected { border-color: #3b82f6; }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: calc(var(--taskbar-h) + 14px); left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20,40,70,0.96);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: #fff; font-size: 13px; font-weight: 500;
+    padding: 9px 18px; border-radius: 30px;
+    z-index: 500; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s; white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  #toast.show { opacity: 1; }
+
+  /* Mobile icon grid */
+  @media (max-width: 480px) {
+    #desktop { flex-direction: row; flex-wrap: wrap; align-content: flex-start; }
+    .icon { width: calc(25vw - 10px); min-width: 62px; }
+    .icon-img { width: 44px; height: 44px; font-size: 24px; }
+    .icon-label { font-size: 10px; max-width: calc(25vw - 12px); }
+  }
+</style>
+</head>
+<body>
+
+<div id="wallpaper"></div>
+<div id="desktop" oncontextmenu="showCtxMenu(event)"></div>
+
+<!-- Taskbar -->
+<div id="taskbar">
+  <div id="start-btn" onclick="toggleStart()">
+    <span class="logo">🖥️</span>
+    <span>Başlat</span>
+  </div>
+  <div id="dock"></div>
+  <div id="taskbar-right">
+    <span id="clock">--:--</span>
+    <span id="date-disp"></span>
+  </div>
+</div>
+
+<!-- FAB (mobile) -->
+<button id="fab" onclick="openAddModal()">＋</button>
+
+<!-- Start Menu -->
+<div id="start-menu">
+  <h3>Uygulamalar</h3>
+  <div id="menu-app-list"></div>
+  <div style="height:1px;background:rgba(255,255,255,0.1);margin:10px 0;"></div>
+  <h3 style="margin-top:2px;">Ayarlar</h3>
+  <div class="menu-item" onclick="openWpModal(); toggleStart();">
+    <div class="mi-icon" style="background:linear-gradient(145deg,#6366f1,#8b5cf6);">🖼️</div> Duvar Kağıdı
+  </div>
+  <div class="menu-item" onclick="openAddModal(); toggleStart();">
+    <div class="mi-icon" style="background:linear-gradient(145deg,#10b981,#059669);">➕</div> İkon Ekle
+  </div>
+  <div class="menu-item" id="edit-menu-item" onclick="toggleEditMode(); toggleStart();">
+    <div class="mi-icon" style="background:linear-gradient(145deg,#f59e0b,#d97706);" id="edit-icon">✏️</div>
+    <span id="edit-label">İkonları Düzenle</span>
+  </div>
+</div>
+
+<!-- Context Menu -->
+<div id="ctx-menu">
+  <div class="ctx-item" onclick="openAddModal(); closeCtx();">➕ &nbsp;Yeni İkon Ekle</div>
+  <div class="ctx-item" onclick="openWpModal(); closeCtx();">🖼️ &nbsp;Duvar Kağıdı</div>
+  <div class="ctx-item" onclick="toggleEditMode(); closeCtx();">✏️ &nbsp;İkonları Düzenle</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="closeCtx();">🔄 &nbsp;Yenile</div>
+</div>
+
+<!-- Add Icon Modal -->
+<div id="add-modal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="drag-handle"></div>
+    <h2>➕ Yeni İkon Ekle</h2>
+    <div class="field">
+      <label>İkon Adı</label>
+      <input type="text" id="i-name" placeholder="örn. Twitter" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>URL</label>
+      <input type="url" id="i-url" placeholder="https://..." autocomplete="off" inputmode="url">
+    </div>
+    <div class="field">
+      <label>Emoji Seç</label>
+      <div class="emoji-grid" id="emoji-grid"></div>
+    </div>
+    <div class="field">
+      <label>Renk</label>
+      <select id="i-color">
+        <option value="linear-gradient(145deg,#ff0000,#cc0000)">🔴 Kırmızı</option>
+        <option value="linear-gradient(145deg,#3b82f6,#1d4ed8)">🔵 Mavi</option>
+        <option value="linear-gradient(145deg,#10b981,#059669)">🟢 Yeşil</option>
+        <option value="linear-gradient(145deg,#f59e0b,#d97706)">🟡 Sarı</option>
+        <option value="linear-gradient(145deg,#8b5cf6,#6d28d9)">🟣 Mor</option>
+        <option value="linear-gradient(145deg,#ec4899,#be185d)">🩷 Pembe</option>
+        <option value="linear-gradient(145deg,#374151,#1f2937)">⚫ Koyu</option>
+        <option value="linear-gradient(145deg,#06b6d4,#0284c7)">🩵 Cyan</option>
+        <option value="linear-gradient(145deg,#ef4444,#7c3aed)">🌈 Ateş</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeAddModal()">İptal</button>
+      <button class="btn btn-primary" onclick="addIcon()">Ekle</button>
+    </div>
+  </div>
+</div>
+
+<!-- Wallpaper Modal -->
+<div id="wp-modal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="drag-handle"></div>
+    <h2>🖼️ Duvar Kağıdı Seç</h2>
+    <div class="wp-grid" id="wp-grid"></div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeWpModal()">İptal</button>
+      <button class="btn btn-primary" onclick="applyWp()">Uygula</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════
+//  STATE & STORAGE
+// ════════════════════════════════════════
+const STORAGE_KEY = 'masaustu_v2';
+
+const DEFAULT_ICONS = [
+  { id: 'yt',    name: 'YouTube',      url: 'https://youtube.com',       emoji: '▶',  color: 'linear-gradient(145deg,#ff0000,#cc0000)', dock: true  },
+  { id: 'gh',    name: 'GitHub',       url: 'https://github.com',        emoji: '🐙', color: 'linear-gradient(145deg,#24292e,#404448)', dock: true  },
+  { id: 'maps',  name: 'Haritalar',    url: 'https://maps.google.com',   emoji: '📍', color: 'linear-gradient(145deg,#4285f4,#34a853)', dock: false },
+  { id: 'mail',  name: 'Gmail',        url: 'https://mail.google.com',   emoji: '✉️', color: 'linear-gradient(145deg,#ea4335,#fbbc04)', dock: true  },
+  { id: 'drive', name: 'Google Drive', url: 'https://drive.google.com',  emoji: '💾', color: 'linear-gradient(145deg,#0f9d58,#4285f4)', dock: false },
+  { id: 'spot',  name: 'Spotify',      url: 'https://open.spotify.com',  emoji: '🎵', color: 'linear-gradient(145deg,#1ed760,#17a34a)', dock: true  },
+];
+const DEFAULT_WP = 'radial-gradient(ellipse at 20% 80%, #0f3460 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, #16213e 0%, transparent 55%), linear-gradient(135deg, #0a1628 0%, #1a3a5c 40%, #0a1628 100%)';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return { icons: JSON.parse(JSON.stringify(DEFAULT_ICONS)), wallpaper: DEFAULT_WP };
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+let state = loadState();
+
+// ════════════════════════════════════════
+//  RENDER
+// ════════════════════════════════════════
+function renderAll() {
+  renderDesktop();
+  renderDock();
+  renderMenuList();
+  document.getElementById('wallpaper').style.background = state.wallpaper;
+}
+
+function makeIconEl(ic, idx) {
+  const a = document.createElement('a');
+  a.className = 'icon';
+  a.href = ic.url;
+  a.target = '_blank';
+  a.dataset.id = ic.id;
+  a.style.animationDelay = Math.min(idx * 0.04, 0.5) + 's';
+  a.innerHTML = `
+    <div class="icon-img" style="background:${ic.color}">${ic.emoji}</div>
+    <span class="icon-label">${ic.name}</span>
+    <span class="del-btn">✕</span>
+  `;
+  a.addEventListener('click', e => {
+    if (document.body.classList.contains('edit-mode')) e.preventDefault();
+  });
+  a.querySelector('.del-btn').addEventListener('click', e => {
+    e.preventDefault(); e.stopPropagation();
+    deleteIcon(ic.id);
+  });
+  return a;
+}
+
+function renderDesktop() {
+  const d = document.getElementById('desktop');
+  d.innerHTML = '';
+  state.icons.forEach((ic, i) => d.appendChild(makeIconEl(ic, i)));
+}
+
+function renderDock() {
+  const dock = document.getElementById('dock');
+  dock.innerHTML = '';
+  state.icons.filter(ic => ic.dock).forEach(ic => {
+    const a = document.createElement('a');
+    a.className = 'dock-icon';
+    a.href = ic.url; a.target = '_blank';
+    a.style.background = ic.color;
+    a.title = ic.name;
+    a.textContent = ic.emoji;
+    dock.appendChild(a);
+  });
+}
+
+function renderMenuList() {
+  const list = document.getElementById('menu-app-list');
+  list.innerHTML = '';
+  state.icons.forEach(ic => {
+    const a = document.createElement('a');
+    a.className = 'menu-item';
+    a.href = ic.url; a.target = '_blank';
+    a.innerHTML = `<div class="mi-icon" style="background:${ic.color}">${ic.emoji}</div> ${ic.name}`;
+    list.appendChild(a);
+  });
+}
+
+// ════════════════════════════════════════
+//  CLOCK
+// ════════════════════════════════════════
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const days = ['Paz','Pzt','Sal','Çar','Per','Cum','Cmt'];
+  const months = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  document.getElementById('date-disp').textContent =
+    `${days[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]}`;
+}
+updateClock(); setInterval(updateClock, 15000);
+
+// ════════════════════════════════════════
+//  START MENU
+// ════════════════════════════════════════
+function toggleStart() {
+  document.getElementById('start-menu').classList.toggle('open');
+  closeCtx();
+}
+document.addEventListener('click', e => {
+  const sm = document.getElementById('start-menu');
+  const sb = document.getElementById('start-btn');
+  if (!sm.contains(e.target) && !sb.contains(e.target)) sm.classList.remove('open');
+});
+
+// ════════════════════════════════════════
+//  CONTEXT MENU
+// ════════════════════════════════════════
+function showCtxMenu(e) {
+  e.preventDefault();
+  const m = document.getElementById('ctx-menu');
+  m.style.left = Math.min(e.clientX, window.innerWidth - 210) + 'px';
+  m.style.top = Math.min(e.clientY, window.innerHeight - 150) + 'px';
+  m.classList.add('open');
+}
+function closeCtx() { document.getElementById('ctx-menu').classList.remove('open'); }
+document.addEventListener('click', () => closeCtx());
+
+// ════════════════════════════════════════
+//  EDIT MODE
+// ════════════════════════════════════════
+let editMode = false;
+function toggleEditMode() {
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  document.getElementById('edit-label').textContent = editMode ? 'Düzenlemeyi Bitir' : 'İkonları Düzenle';
+  document.getElementById('edit-icon').textContent = editMode ? '✅' : '✏️';
+  showToast(editMode ? '✏️ Silmek için ✕ butonuna bas' : '✅ Düzenleme bitti');
+}
+
+function deleteIcon(id) {
+  state.icons = state.icons.filter(ic => ic.id !== id);
+  saveState(); renderAll();
+  showToast('🗑️ İkon silindi');
+}
+
+// ════════════════════════════════════════
+//  ADD ICON
+// ════════════════════════════════════════
+const emojis = ['🌐','📺','🎮','📧','🗂️','📁','🎵','🎬','🗞️','📰','🔗','💬',
+                 '📷','🖼️','🛒','🏦','✈️','🗺️','📚','🔍','⚙️','🧩','🎯','💡',
+                 '🤖','🐙','🌍','🛡️','💰','📊','🎧','🖥️'];
+let selEmoji = emojis[0];
+
+function buildEmojiGrid() {
+  const g = document.getElementById('emoji-grid');
+  g.innerHTML = '';
+  emojis.forEach(em => {
+    const d = document.createElement('div');
+    d.className = 'emoji-pick' + (em === selEmoji ? ' selected' : '');
+    d.textContent = em;
+    d.onclick = () => {
+      selEmoji = em;
+      document.querySelectorAll('.emoji-pick').forEach(x => x.classList.remove('selected'));
+      d.classList.add('selected');
+    };
+    g.appendChild(d);
+  });
+}
+
+function openAddModal() {
+  selEmoji = emojis[0]; buildEmojiGrid();
+  document.getElementById('add-modal').classList.add('open');
+  setTimeout(() => document.getElementById('i-name').focus(), 250);
+}
+function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); }
+
+function addIcon() {
+  const name = document.getElementById('i-name').value.trim();
+  let url = document.getElementById('i-url').value.trim();
+  const color = document.getElementById('i-color').value;
+  if (!name || !url) { showToast('⚠️ İsim ve URL gerekli!'); return; }
+  if (!url.startsWith('http')) url = 'https://' + url;
+  const id = 'ic_' + Date.now();
+  state.icons.push({ id, name, url, emoji: selEmoji, color, dock: false });
+  saveState(); renderAll(); closeAddModal();
+  document.getElementById('i-name').value = '';
+  document.getElementById('i-url').value = '';
+  showToast('✅ ' + name + ' eklendi!');
+}
+
+// ════════════════════════════════════════
+//  WALLPAPER
+// ════════════════════════════════════════
+const wallpapers = [
+  { name: 'Gece Mavisi',   style: 'radial-gradient(ellipse at 20% 80%, #0f3460 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, #16213e 0%, transparent 55%), linear-gradient(135deg, #0a1628, #1a3a5c, #0a1628)' },
+  { name: 'Alacakaranlık', style: 'radial-gradient(ellipse at 30% 60%, #4a1942 0%, transparent 60%), radial-gradient(ellipse at 70% 30%, #0d1b4b 0%, transparent 60%), linear-gradient(135deg, #1a0a2e, #4a1942, #0d1b4b)' },
+  { name: 'Orman',         style: 'radial-gradient(ellipse at 40% 70%, #0a2e1a 0%, transparent 55%), radial-gradient(ellipse at 70% 30%, #143d25 0%, transparent 55%), linear-gradient(135deg, #061810, #0f3320, #061810)' },
+  { name: 'Volkan',        style: 'radial-gradient(ellipse at 50% 80%, #4a1000 0%, transparent 50%), radial-gradient(ellipse at 30% 40%, #1a0a00 0%, transparent 50%), linear-gradient(135deg, #1a0500, #3d0f00, #1a0500)' },
+  { name: 'Buz',           style: 'radial-gradient(ellipse at 30% 30%, #cce8f4 0%, transparent 55%), radial-gradient(ellipse at 70% 70%, #a0d4f0 0%, transparent 55%), linear-gradient(135deg, #c0e8ff, #a0d4f0, #d0eeff)' },
+  { name: 'Altın',         style: 'radial-gradient(ellipse at 40% 40%, #4a3800 0%, transparent 55%), radial-gradient(ellipse at 70% 60%, #2a2000 0%, transparent 55%), linear-gradient(135deg, #1a1200, #4a3800, #1a1200)' },
+  { name: 'Mor',           style: 'radial-gradient(ellipse at 30% 50%, #2d1b6b 0%, transparent 55%), radial-gradient(ellipse at 70% 30%, #1a0a40 0%, transparent 55%), linear-gradient(135deg, #0f0820, #2d1b6b, #0f0820)' },
+  { name: 'Gün Batımı',    style: 'radial-gradient(ellipse at 50% 90%, #7c2d00 0%, transparent 50%), radial-gradient(ellipse at 30% 40%, #c0580a 0%, transparent 50%), linear-gradient(180deg, #0a1628 0%, #7c2d00 60%, #c0580a 100%)' },
+  { name: 'Okyanus',       style: 'radial-gradient(ellipse at 30% 60%, #003366 0%, transparent 55%), radial-gradient(ellipse at 70% 40%, #004d99 0%, transparent 55%), linear-gradient(135deg, #001a33, #003366, #001a33)' },
+];
+
+let selectedWp = 0;
+function buildWpGrid() {
+  const g = document.getElementById('wp-grid');
+  g.innerHTML = '';
+  wallpapers.forEach((wp, i) => {
+    const d = document.createElement('div');
+    const isCurrent = wp.style === state.wallpaper;
+    d.className = 'wp-opt' + (isCurrent ? ' selected' : '');
+    d.style.background = wp.style; d.title = wp.name;
+    if (isCurrent) selectedWp = i;
+    d.onclick = () => {
+      selectedWp = i;
+      document.querySelectorAll('.wp-opt').forEach(x => x.classList.remove('selected'));
+      d.classList.add('selected');
+    };
+    g.appendChild(d);
+  });
+}
+function openWpModal() { buildWpGrid(); document.getElementById('wp-modal').classList.add('open'); }
+function closeWpModal() { document.getElementById('wp-modal').classList.remove('open'); }
+function applyWp() {
+  state.wallpaper = wallpapers[selectedWp].style;
+  saveState();
+  document.getElementById('wallpaper').style.background = state.wallpaper;
+  closeWpModal();
+  showToast('🖼️ Duvar kağıdı değiştirildi');
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════
+renderAll();
+</script>
+</body>
+</html>
