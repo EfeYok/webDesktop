@@ -362,6 +362,16 @@ body.edit-mode .icon {
     transform: scale(.9);
 }
 
+.fp-icon.dragging {
+    opacity: .4;
+    transform: scale(.93);
+}
+
+.fp-icon.drag-over {
+    border-color: var(--ac);
+    background: rgba(88, 166, 255, .1);
+}
+
 .fp-icon .icon-wrap {
     width: 44px;
     height: 44px;

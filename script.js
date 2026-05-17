@@ -177,7 +177,7 @@ function makeFolderEl(ic, idx) {
     div.innerHTML = innerContent + `<span class="icon-label">${ic.name}</span><span class="del-btn">✕</span><span class="edit-btn">${editBtnSvg()}</span>`;
     div.querySelector('.del-btn').addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); deleteItem(ic.id); });
     div.querySelector('.edit-btn').addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); openEditModal(ic.id); });
-    div.addEventListener('click', e => { if (editMode) return; openFolderPopup(ic, div); });
+    div.addEventListener('click', e => { if (e.target.closest('.del-btn') || e.target.closest('.edit-btn')) return; openFolderPopup(ic, div); });
     if (editMode) { attachDesktopDrag(div, ic.id); }
     return div;
 }
@@ -306,23 +306,42 @@ function attachDockDrag(el, id) {
 // FOLDER POPUP
 // ═══════════════════════════════════════
 let activeFolderId = null;
+let folderDragIdx = -1;
 function openFolderPopup(folder, anchor) {
     activeFolderId = folder.id;
     document.getElementById('fp-title').textContent = folder.name;
     const items = folder.items || [];
     document.getElementById('fp-count').textContent = items.length + ' uygulama';
     const grid = document.getElementById('fp-grid'); grid.innerHTML = '';
-    items.forEach(ic => {
-        const a = document.createElement('a');
-        a.className = 'fp-icon'; a.href = ic.url; a.target = '_blank';
+    items.forEach((ic, idx) => {
+        // Use div in edit mode to prevent link navigation interfering with buttons
+        const a = document.createElement(editMode ? 'div' : 'a');
+        a.className = 'fp-icon'; a.dataset.fIdx = idx;
+        if (!editMode) { a.href = ic.url; a.target = '_blank'; }
         a.innerHTML = makeBg(ic, '44px', '44px', '11px') + `<span class="icon-label">${ic.name}</span><span class="del-btn" style="top:0;right:0;">✕</span><span class="edit-btn" style="top:18px;right:0;">${editBtnSvg()}</span>`;
         a.querySelector('.del-btn').addEventListener('click', ev => { ev.preventDefault(); ev.stopPropagation(); deleteFolderItem(folder.id, ic.id); });
         a.querySelector('.edit-btn').addEventListener('click', ev => { ev.preventDefault(); ev.stopPropagation(); openEditModal(ic.id, folder.id); });
-        a.addEventListener('click', ev => {
-            if (editMode) { ev.preventDefault(); return; }
-            // Close folder popup when navigating
-            closePopup();
-        });
+        if (!editMode) {
+            a.addEventListener('click', () => closePopup());
+        }
+        // Drag-drop reorder inside folder (edit mode)
+        if (editMode) {
+            a.draggable = true;
+            a.addEventListener('dragstart', ev => { ev.dataTransfer.effectAllowed = 'move'; a.classList.add('dragging'); folderDragIdx = idx; });
+            a.addEventListener('dragend', () => a.classList.remove('dragging'));
+            a.addEventListener('dragover', ev => { ev.preventDefault(); a.classList.add('drag-over'); });
+            a.addEventListener('dragleave', () => a.classList.remove('drag-over'));
+            a.addEventListener('drop', ev => {
+                ev.preventDefault(); a.classList.remove('drag-over');
+                if (folderDragIdx === idx || folderDragIdx < 0) return;
+                const fitems = folder.items || [];
+                const [moved] = fitems.splice(folderDragIdx, 1);
+                fitems.splice(idx, 0, moved);
+                save(); renderAll();
+                const el = document.querySelector(`[data-id="${folder.id}"]`);
+                if (el) openFolderPopup(folder, el);
+            });
+        }
         grid.appendChild(a);
     });
     const add = document.createElement('div'); add.className = 'fp-add';
