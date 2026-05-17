@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="Duck.jpeg">
+    <title>Masaüstüm</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="wp"></div>
+    <div id="desktop" oncontextmenu="showCtxMenu(event)"></div>
+
+    <div id="taskbar">
+        <div id="start-btn" onclick="toggleStart()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            </svg>
+            <span>Menü</span>
+        </div>
+        <div id="dock"></div>
+        <div id="taskbar-right">
+            <span id="clock">--:--</span>
+            <span id="date-disp"></span>
+        </div>
+    </div>
+
+    <button id="fab" onclick="openAddModal(null)">+</button>
+
+    <!-- Folder Popup -->
+    <div id="folder-popup">
+        <div id="fp-header">
+            <span id="fp-title">Klasör</span>
+            <span id="fp-count"></span>
+        </div>
+        <div id="fp-grid"></div>
+    </div>
+
+    <!-- Start Menu -->
+    <div id="start-menu">
+        <h3>Uygulamalar</h3>
+        <div id="menu-app-list"></div>
+        <div style="height:1px;background:var(--b1);margin:10px 0;"></div>
+        <h3>Ayarlar</h3>
+        <div class="menu-item" onclick="openWpModal();toggleStart();">
+            <div class="menu-item-left">
+                <div class="mi-wrap" style="background:#1f2d3d;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="3" />
+                        <circle cx="8" cy="8" r="2" />
+                        <path d="m2 15 5-5 4 4 3-3 4 4" />
+                    </svg>
+                </div>
+                <span class="mi-label">Duvar Kağıdı</span>
+            </div>
+        </div>
+        <div class="menu-item" onclick="openAddModal(null);toggleStart();">
+            <div class="menu-item-left">
+                <div class="mi-wrap" style="background:#1a2d1a;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                </div>
+                <span class="mi-label">İkon Ekle</span>
+            </div>
+        </div>
+        <div class="menu-item" id="edit-mi" onclick="toggleEditMode();toggleStart();">
+            <div class="menu-item-left">
+                <div class="mi-wrap" style="background:#2d2a1a;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#d29922" stroke-width="2">
+                        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4z" />
+                    </svg>
+                </div>
+                <span id="edit-label" class="mi-label">İkonları Düzenle</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="ctx-menu">
+        <div class="ctx-item" onclick="openAddModal(null);closeCtx();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg> Yeni Uygulama
+        </div>
+        <div class="ctx-item" onclick="openAddModal(null,'folder');closeCtx();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+            </svg> Yeni Klasör
+        </div>
+        <div class="ctx-item" onclick="openWpModal();closeCtx();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="3" />
+                <circle cx="8" cy="8" r="2" />
+                <path d="m2 15 5-5 4 4 3-3 4 4" />
+            </svg> Duvar Kağıdı
+        </div>
+        <div class="ctx-sep"></div>
+        <div class="ctx-item" onclick="toggleEditMode();closeCtx();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m18.5 2.5 3 3L12 15l-4 1 1-4z" />
+            </svg> Düzenleme Modu
+        </div>
+    </div>
+
+    <!-- Add Modal -->
+    <div id="add-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="drag-handle"></div>
+            <h2 id="add-modal-title">Yeni Uygulama</h2>
+            <div class="type-toggle" id="type-toggle">
+                <button class="type-btn active" id="type-app-btn" onclick="setType('app')">Uygulama</button>
+                <button class="type-btn" id="type-folder-btn" onclick="setType('folder')">Klasör</button>
+            </div>
+            <div class="field"><label>İsim</label><input type="text" id="i-name" placeholder="örn. YouTube"
+                    autocomplete="off"></div>
+            <div class="field" id="url-field"><label>URL</label><input type="url" id="i-url" placeholder="https://..."
+                    inputmode="url"></div>
+            <div class="field"><label>İkon</label>
+                <div class="icon-picker-grid" id="icon-picker"></div>
+            </div>
+            <div class="field"><label>Renk</label>
+                <select id="i-color">
+                    <option value="#c62828,#e53935">Kırmızı</option>
+                    <option value="#1565c0,#1976d2">Mavi</option>
+                    <option value="#1b5e20,#388e3c">Yeşil</option>
+                    <option value="#e65100,#f57c00">Turuncu</option>
+                    <option value="#4527a0,#7b1fa2">Mor</option>
+                    <option value="#880e4f,#c2185b">Pembe</option>
+                    <option value="#212121,#424242">Koyu</option>
+                    <option value="#006064,#0097a7">Teal</option>
+                    <option value="#1a237e,#283593">Lacivert</option>
+                    <option value="#bf360c,#d84315">Ateş</option>
+                    <option value="#37474f,#546e7a">Çelik</option>
+                    <option value="#4e342e,#6d4c41">Kahve</option>
+                </select>
+            </div>
+            <div class="field" id="view-mode-field"><label>Klasör Görünümü</label>
+                <div class="type-toggle">
+                    <button class="type-btn active" id="vm-transparent-btn" onclick="setViewMode('transparent')">Şeffaf</button>
+                    <button class="type-btn" id="vm-icon-btn" onclick="setViewMode('icon')">İkon</button>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel" onclick="closeAddModal()">İptal</button>
+                <button class="btn btn-primary" id="add-confirm-btn" onclick="confirmAdd()">Ekle</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wallpaper Modal -->
+    <div id="wp-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="drag-handle"></div>
+            <h2>Duvar Kağıdı</h2>
+            <div class="wp-grid" id="wp-grid"></div>
+            <div class="modal-actions">
+                <button class="btn btn-cancel" onclick="closeWpModal()">İptal</button>
+                <button class="btn btn-primary" onclick="applyWp()">Uygula</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+    <script src="script.js"></script>
+</body>
+
+</html>

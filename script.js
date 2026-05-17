@@ -1,0 +1,599 @@
+// ═══════════════════════════════════════
+// ICONS
+// ═══════════════════════════════════════
+const IC = {
+    youtube: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="3"/><polygon points="10,9 16,12 10,15" fill="currentColor" stroke="none"/></svg>`,
+    github: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.6-4.04-1.6-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.9 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>`,
+    gmail: `<svg viewBox="0 0 24 24"><path d="M6 18V8.4L2 5.5V18a2 2 0 0 0 2 2h2zm12 0V8.4l4-2.9V18a2 2 0 0 1-2 2h-2zM6 6.6 12 11l6-4.4V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v1.6z" fill="currentColor"/><path d="M2 5.5 12 13l10-7.5" fill="none" stroke="currentColor" stroke-width="0"/></svg>`,
+    drive: `<svg viewBox="0 0 87.3 78" fill="currentColor"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3L27.5 51H0c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="M43.65 25 29.9 1.2C28.55 2 27.4 3.1 26.6 4.5L1.2 46.5a9 9 0 0 0-1.2 4.5h27.5z" fill="#00ac47"/><path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5H59.8L73.55 76.8z" fill="#ea4335"/><path d="M43.65 25 57.4 1.2C56.05.4 54.5 0 52.9 0H34.4c-1.6 0-3.1.45-4.5 1.2z" fill="#00832d"/><path d="M59.8 51H27.5L13.75 76.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.1-.45 4.5-1.2z" fill="#2684fc"/><path d="M73.4 26.45 59.65 4.5c-.8-1.4-1.95-2.5-3.3-3.3L43.65 25l16.15 26H87.3c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>`,
+    spotify: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.52 17.28c-.24.36-.66.48-1.02.24-2.82-1.74-6.36-2.1-10.56-1.14-.408.096-.816-.156-.912-.552-.096-.408.156-.816.552-.912 4.56-1.044 8.52-.6 11.64 1.32.42.18.54.66.3 1.08zm1.44-3.3c-.3.42-.84.6-1.26.3-3.24-1.98-8.16-2.58-11.94-1.38a.95.95 0 0 1-1.182-.636A.95.95 0 0 1 5.19 11.1c4.38-1.32 9.84-.66 13.56 1.62.42.3.6.84.3 1.26zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.3a1.14 1.14 0 0 1-.672-2.184c4.26-1.26 11.28-1.02 15.72 1.56.54.3.72 1.02.42 1.56-.3.42-1.02.6-1.56.3z"/></svg>`,
+    maps: `<svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#34a853"/><circle cx="12" cy="9" r="2.5" fill="#fff" opacity=".9"/></svg>`,
+    notion: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm2.5 3v9h1.8l.2-5.5L12 15h1.5l3.5-5.5V15H18.5V6H17l-3.5 5.5L10 6H6.5z"/></svg>`,
+    twitter: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+    discord: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.32 4.37A19.8 19.8 0 0 0 15.43 3c-.21.38-.46.9-.63 1.3a18.27 18.27 0 0 0-5.6 0C9.03 3.9 8.78 3.38 8.57 3A19.77 19.77 0 0 0 3.68 4.37C.53 9.17-.32 13.85.1 18.47a20.07 20.07 0 0 0 6.13 3.1c.5-.67.94-1.38 1.32-2.13a12.9 12.9 0 0 1-2.08-1c.17-.13.34-.26.5-.4a14.33 14.33 0 0 0 12.26 0c.16.14.33.27.5.4-.67.39-1.36.72-2.08 1 .38.75.82 1.46 1.31 2.13a20.04 20.04 0 0 0 6.13-3.1c.5-5.27-.85-9.91-3.78-14.1zM8.02 15.65c-1.19 0-2.17-1.1-2.17-2.44s.96-2.44 2.17-2.44c1.22 0 2.19 1.1 2.17 2.44 0 1.34-.96 2.44-2.17 2.44zm8.01 0c-1.19 0-2.17-1.1-2.17-2.44s.96-2.44 2.17-2.44c1.22 0 2.19 1.1 2.17 2.44 0 1.34-.95 2.44-2.17 2.44z"/></svg>`,
+    instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`,
+    reddit: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .379-.24l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.463.463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73z"/></svg>`,
+    twitch: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>`,
+    linkedin: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`,
+    telegram: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`,
+    slack: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>`,
+    whatsapp: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>`,
+    netflix: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596 2.344.058 4.85.398 4.854.398-2.8-7.924-5.923-16.747-8.487-24zm8.489 0v9.63L18.6 24c.917-.483 2.288-.1 2.284-.003V0zm-8.489 14.371v9.623h4.972L9.88 14.373z"/></svg>`,
+    figma: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.019 3.019 3.019h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zm9.227 8.019a4.49 4.49 0 0 1-4.49-4.49v-4.49h4.49a4.49 4.49 0 0 1 0 8.98zm-3.019-7.51v3.019c0 1.665 1.355 3.019 3.019 3.019s3.019-1.354 3.019-3.019-1.354-3.019-3.019-3.019h-3.019zM8.148 24c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v4.49c0 2.476-2.014 4.49-4.588 4.49zm0-7.509c-1.665 0-3.019 1.355-3.019 3.019 0 1.665 1.354 3.019 3.019 3.019 1.665 0 3.019-1.354 3.019-3.019v-3.019H8.148z"/></svg>`,
+    vscode: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>`,
+    apple: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.54 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701z"/></svg>`,
+    amazon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M.045 18.02c.072-.116.187-.124.348-.022 3.636 2.11 7.594 3.166 11.87 3.166 2.852 0 5.668-.533 8.447-1.595l.315-.14c.138-.06.234-.1.293-.13.226-.088.39-.046.525.13.12.174.09.336-.12.48-.256.19-.6.41-1.006.654-1.244.743-2.64 1.316-4.185 1.726a17.617 17.617 0 0 1-10.951-.577 17.88 17.88 0 0 1-5.43-3.35c-.1-.075-.252-.194-.318-.302-.1-.15-.085-.29.012-.44M6.296 6.03c1.085-1.31 2.47-1.963 4.155-1.963a5.66 5.66 0 0 1 1.58.218c.516.15.986.39 1.407.718.42.33.764.727 1.03 1.194.266.468.4.985.4 1.551v.21c0 .555-.077 1.013-.232 1.375-.155.36-.367.65-.638.867a2.66 2.66 0 0 1-.902.464 3.742 3.742 0 0 1-1.018.14H10.66c-.277 0-.507-.052-.688-.155a.773.773 0 0 1-.35-.44c-.073-.19-.11-.43-.11-.72 0-.47.125-.852.373-1.147.25-.295.6-.55 1.054-.764.454-.215.987-.38 1.598-.496.61-.115 1.27-.195 1.98-.238a2.22 2.22 0 0 0-.22-.94c-.138-.3-.343-.56-.613-.78-.27-.22-.607-.39-1.01-.51a4.8 4.8 0 0 0-1.374-.18c-.9 0-1.65.22-2.25.66-.6.44-.97 1.01-1.11 1.71-.05.23-.14.38-.28.44-.13.05-.31.07-.54.07h-.08c-.24 0-.43-.04-.57-.12-.14-.08-.2-.23-.2-.46 0-.3.1-.64.29-1.01.18-.38.46-.74.83-1.08M6.13 4.57c.31-.38.65-.71 1.04-1 .38-.28.78-.52 1.2-.71.42-.18.85-.32 1.3-.41.45-.1.9-.14 1.36-.14 1.51 0 2.84.41 3.98 1.23l.02.01c.23.16.45.34.65.52.1.1.2.2.3.31.24.26.47.56.68.88.22.32.42.66.6 1.04.18.38.33.78.45 1.21.12.42.2.87.22 1.35 0 .11.01.22.01.34v.07c0 .58-.11 1.06-.33 1.44-.22.38-.5.67-.85.88-.34.21-.72.35-1.13.43-.41.08-.82.12-1.24.12H10.63c-.5 0-.9-.1-1.2-.32-.3-.22-.5-.51-.62-.89a4.19 4.19 0 0 1-.17-1.23c0-.66.18-1.25.54-1.75.36-.5.9-.9 1.63-1.2.72-.3 1.61-.48 2.66-.55-.03-.16-.07-.32-.12-.48a2.6 2.6 0 0 0-.24-.48 1.98 1.98 0 0 0-.38-.41 1.73 1.73 0 0 0-.51-.3 2.16 2.16 0 0 0-.68-.1c-.6 0-1.1.15-1.5.44a2.2 2.2 0 0 0-.73 1.15c-.09.35-.23.57-.43.66-.2.1-.47.14-.83.14-.3 0-.56-.04-.78-.13-.22-.09-.34-.26-.34-.51 0-.27.07-.57.22-.89.15-.32.36-.63.63-.91"/><path d="M20.984 18.83c-.083.124-.2.15-.35.076a5.496 5.496 0 0 0-.493-.23 6.16 6.16 0 0 0-.675-.22 4.6 4.6 0 0 0-.748-.127 4.003 4.003 0 0 0-.72-.014 3.25 3.25 0 0 0-.616.1c-.17.05-.29.1-.37.15-.07.05-.13.1-.17.15-.04.05-.06.1-.06.14 0 .12.07.21.2.26.13.05.3.09.5.11.2.02.42.03.64.02.22-.01.43-.02.61-.04a2.9 2.9 0 0 1-.09.56c-.05.18-.13.34-.22.49a1.97 1.97 0 0 1-.33.38c-.13.1-.27.18-.43.23-.16.05-.33.08-.52.08-.57 0-1.03-.17-1.4-.52a1.77 1.77 0 0 1-.53-1.34c0-.5.15-.95.46-1.33.3-.38.73-.68 1.26-.89.54-.2 1.16-.3 1.86-.3.32 0 .64.02.96.07.32.05.63.12.93.2.3.09.59.19.86.31.27.12.52.25.74.38l.21.13c.12.08.17.18.13.3z"/></svg>`,
+    globe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+    // ── brand logos (monochrome) ──
+    github: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.6-4.04-1.6-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.9 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>`,
+    gmail: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+    drive: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 10.5L12 3 16.5 10.5H7.5Z" opacity=".6"/><path d="M3 18L7.5 10.5 12 18H3Z" opacity=".85"/><path d="M12 18L16.5 10.5 21 18H12Z"/></svg>`,
+    spotify: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.52 17.28c-.24.36-.66.48-1.02.24-2.82-1.74-6.36-2.1-10.56-1.14-.408.096-.816-.156-.912-.552-.096-.408.156-.816.552-.912 4.56-1.044 8.52-.6 11.64 1.32.42.18.54.66.3 1.08zm1.44-3.3c-.3.42-.84.6-1.26.3-3.24-1.98-8.16-2.58-11.94-1.38a.95.95 0 0 1-1.182-.636A.95.95 0 0 1 5.19 11.1c4.38-1.32 9.84-.66 13.56 1.62.42.3.6.84.3 1.26zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.3a1.14 1.14 0 0 1-.672-2.184c4.26-1.26 11.28-1.02 15.72 1.56.54.3.72 1.02.42 1.56-.3.42-1.02.6-1.56.3z"/></svg>`,
+    maps: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="currentColor" stroke="none" opacity=".7"/></svg>`,
+    instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`,
+    reddit: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .379-.24l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.463.463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73z"/></svg>`,
+    linkedin: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`,
+    whatsapp: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>`,
+    notion: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.14c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z"/></svg>`,
+    canva: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-.45 17.4c-1.246.018-2.654-.61-3.553-1.755-1.142-1.443-1.213-3.393-.174-5.013.817-1.283 2.132-2.075 3.63-2.17 1.358-.087 2.612.407 3.524 1.4.195.21.374.44.535.687l-.9.623c-.617-.957-1.562-1.52-2.67-1.52-1.835 0-3.21 1.404-3.21 3.277 0 1.846 1.372 3.235 3.198 3.235 1.21 0 2.27-.644 2.82-1.685l.927.55c-.73 1.316-2.03 2.133-3.727 2.17zm5.31-.857c-.44 0-.8-.357-.8-.8s.36-.8.8-.8.8.357.8.8-.36.8-.8.8z"/></svg>`,
+    claude: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3C7 3 3 7 3 12s4 9 9 9 9-4 9-9"/><path d="M16 3.5C14.5 5 13 7.5 12 12c-1-4.5-2.5-7-4-8.5"/><path d="M21 7c-1.5.5-4 1.5-9 5-5-3.5-7.5-4.5-9-5"/></svg>`,
+    gemini: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5L12 2z"/><path d="M12 6l-1.5 4.5L6 12l4.5 1.5L12 18l1.5-4.5L18 12l-4.5-1.5L12 6z" opacity=".35"/></svg>`,
+    deepseek: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 4-4 4"/><circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/></svg>`,
+    // ── generic icons ──
+    folder: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`,
+    globe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+    code: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+    music: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+    camera: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`,
+    chat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+    cloud: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>`,
+    shop: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+    star: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+    game: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1" fill="currentColor" stroke="none"/><rect x="2" y="7" width="20" height="10" rx="5"/></svg>`,
+    monitor: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+    building: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 22V12h6v10"/><path d="M9 7h1m4 0h1M9 11h1m4 0h1"/></svg>`,
+    link: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+    settings: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+    notepad: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/></svg>`,
+    // ── playing cards ──
+    card_spade: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3C8 7 4 9.5 4 13a4 4 0 0 0 6.5 3.1C10 17.4 9.5 19 8 20h8c-1.5-1-2-2.6-2.5-3.9A4 4 0 0 0 20 13c0-3.5-4-6-8-10z" fill="currentColor" stroke="none" opacity=".85"/><text x="12" y="21" text-anchor="middle" font-size="5.5" font-family="serif" fill="currentColor" stroke="none">A♠</text></svg>`,
+    card_heart: `<svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-8-5.4-8-11A5 5 0 0 1 12 6.6 5 5 0 0 1 20 9c0 5.6-8 11-8 11z" fill="currentColor" stroke="none" opacity=".85"/><text x="12" y="21.5" text-anchor="middle" font-size="5.5" font-family="serif" fill="currentColor" stroke="none">A♥</text></svg>`,
+    card_diamond: `<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12,3 20,12 12,21 4,12" opacity=".85"/><text x="12" y="22" text-anchor="middle" font-size="5" font-family="serif" fill="white" stroke="none">A♦</text></svg>`,
+    card_club: `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3.5" opacity=".85"/><circle cx="7.5" cy="12" r="3.5" opacity=".85"/><circle cx="16.5" cy="12" r="3.5" opacity=".85"/><path d="M10.5 15.5 9 20h6l-1.5-4.5" opacity=".85"/><text x="12" y="21.5" text-anchor="middle" font-size="5" font-family="serif" fill="white" stroke="none">A♣</text></svg>`,
+};
+const IK = Object.keys(IC);
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+const SK = 'masaustu_v5';
+const DEFI = [
+    { id: 'yt', type: 'app', name: 'YouTube', url: 'https://youtube.com', icon: 'youtube', color: '#1a1a1a,#2d2d2d', dock: true },
+    { id: 'gh', type: 'app', name: 'GitHub', url: 'https://github.com', icon: 'github', color: '#1a1a1a,#2d2d2d', dock: true },
+    { id: 'mail', type: 'app', name: 'Gmail', url: 'https://mail.google.com', icon: 'gmail', color: '#1a1a1a,#2d2d2d', dock: true },
+    { id: 'drive', type: 'app', name: 'Drive', url: 'https://drive.google.com', icon: 'drive', color: '#1a1a1a,#2d2d2d', dock: false },
+    { id: 'spot', type: 'app', name: 'Spotify', url: 'https://open.spotify.com', icon: 'spotify', color: '#1a1a1a,#2d2d2d', dock: true },
+    { id: 'maps', type: 'app', name: 'Haritalar', url: 'https://maps.google.com', icon: 'maps', color: '#1a1a1a,#2d2d2d', dock: false },
+    { id: 'ig', type: 'app', name: 'Instagram', url: 'https://instagram.com', icon: 'instagram', color: '#1a1a1a,#2d2d2d', dock: false },
+    { id: 'rd', type: 'app', name: 'Reddit', url: 'https://reddit.com', icon: 'reddit', color: '#1a1a1a,#2d2d2d', dock: false },
+    { id: 'li', type: 'app', name: 'LinkedIn', url: 'https://linkedin.com', icon: 'linkedin', color: '#1a1a1a,#2d2d2d', dock: false },
+    { id: 'wa', type: 'app', name: 'WhatsApp', url: 'https://web.whatsapp.com', icon: 'whatsapp', color: '#1a1a1a,#2d2d2d', dock: false },
+    { id: 'cv', type: 'app', name: 'Canva', url: 'https://canva.com', icon: 'canva', color: '#1a1a1a,#2d2d2d', dock: false },
+    { id: 'nt', type: 'app', name: 'Notion', url: 'https://notion.so', icon: 'notion', color: '#1a1a1a,#2d2d2d', dock: false },
+    {
+        id: 'ai', type: 'folder', name: 'AI', icon: 'gemini', color: '#1a1a1a,#2d2d2d', dock: false, items: [
+            { id: 'cl', type: 'app', name: 'Claude', url: 'https://claude.ai', icon: 'claude', color: '#1a1a1a,#2d2d2d' },
+            { id: 'gm', type: 'app', name: 'Gemini', url: 'https://gemini.google.com', icon: 'gemini', color: '#1a1a1a,#2d2d2d' },
+            { id: 'ds', type: 'app', name: 'DeepSeek', url: 'https://chat.deepseek.com', icon: 'deepseek', color: '#1a1a1a,#2d2d2d' },
+        ]
+    },
+];
+const DEFWP = 'radial-gradient(ellipse 70% 50% at 15% 85%,rgba(88,166,255,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 85% 15%,rgba(88,166,255,.05) 0%,transparent 60%),linear-gradient(160deg,#0d1117 0%,#111827 50%,#0d1117 100%)';
+const NOTEPAD_ID = 'notepad_app';
+const NOTEPAD_ITEM = { id: NOTEPAD_ID, type: 'app', name: 'Not Defteri', url: 'notepad.html', icon: 'notepad', color: '#1a237e,#283593', dock: false, isSystem: true };
+
+function loadState() {
+    try {
+        const r = localStorage.getItem(SK);
+        if (r) {
+            const s = JSON.parse(r);
+            // Ensure notepad exists in icons
+            if (!s.icons.find(x => x.id === NOTEPAD_ID)) {
+                s.icons.push({ ...NOTEPAD_ITEM });
+            }
+            return s;
+        }
+    } catch (e) { }
+    const def = { icons: JSON.parse(JSON.stringify(DEFI)), wallpaper: DEFWP };
+    def.icons.push({ ...NOTEPAD_ITEM });
+    return def;
+}
+function save() { try { localStorage.setItem(SK, JSON.stringify(state)); } catch (e) { } }
+let state = loadState();
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function svg(key, color = '#fff', w = '28px', h = '28px') {
+    return (IC[key] || IC.globe).replace('<svg ', `<svg style="color:${color};width:${w};height:${h};" `);
+}
+function grad(color) { const [c1, c2] = (color || '#333,#555').split(','); return `linear-gradient(145deg,${c1},${c2})`; }
+function makeBg(ic, w, h, r) { return `<div class="icon-wrap" style="background:${grad(ic.color)};width:${w};height:${h};border-radius:${r};">${svg(ic.icon || 'globe')}</div>`; }
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function renderAll() { renderDesktop(); renderDock(); renderMenuList(); document.getElementById('wp').style.background = state.wallpaper; }
+
+function renderDesktop() {
+    const d = document.getElementById('desktop');
+    d.innerHTML = '';
+    state.icons.forEach((ic, i) => {
+        const el = ic.type === 'folder' ? makeFolderEl(ic, i) : makeAppEl(ic, i);
+        d.appendChild(el);
+    });
+}
+
+function editBtnSvg() {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18.5 2.5 3 3L12 15l-4 1 1-4z"/></svg>`;
+}
+function folderBadgeSvg() {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`;
+}
+
+function makeAppEl(ic, idx) {
+    const a = document.createElement('a');
+    a.className = 'icon'; a.href = ic.url; a.target = '_blank'; a.dataset.id = ic.id;
+    a.style.animationDelay = Math.min(idx * .04, .5) + 's';
+    a.innerHTML = makeBg(ic, '54px', '54px', '14px') + `<span class="icon-label">${ic.name}</span><span class="del-btn">✕</span><span class="edit-btn">${editBtnSvg()}</span>`;
+    a.addEventListener('click', e => { if (editMode) e.preventDefault(); });
+    a.querySelector('.del-btn').addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); deleteItem(ic.id); });
+    a.querySelector('.edit-btn').addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); openEditModal(ic.id); });
+    if (editMode) { attachDesktopDrag(a, ic.id); }
+    return a;
+}
+
+function makeFolderEl(ic, idx) {
+    const div = document.createElement('div');
+    div.className = 'icon folder-icon'; div.dataset.id = ic.id;
+    div.style.animationDelay = Math.min(idx * .04, .5) + 's';
+    const items = ic.items || [];
+    const [c1, c2] = (ic.color || '#333,#555').split(',');
+    const vm = ic.viewMode || 'transparent';
+    let innerContent;
+    if (vm === 'icon') {
+        // Icon mode: show folder icon like a normal app
+        innerContent = `<div class="icon-wrap" style="background:linear-gradient(145deg,${c1},${c2})">${svg(ic.icon || 'folder')}</div>`;
+        if (!editMode) innerContent += `<span class="folder-badge">${folderBadgeSvg()}</span>`;
+    } else {
+        // Transparent mode: show preview of items inside
+        const slots = [0, 1, 2, 3].map(i => {
+            if (items[i]) { const [f1, f2] = (items[i].color || '#333,#555').split(','); return `<div class="fp" style="background:linear-gradient(145deg,${f1},${f2})">${svg(items[i].icon || 'globe', '#fff', '10px', '10px')}</div>`; }
+            return `<div class="fp" style="background:rgba(255,255,255,.08)"></div>`;
+        }).join('');
+        innerContent = `<div class="icon-wrap" style="background:linear-gradient(145deg,${c1},${c2})"><div class="folder-preview">${slots}</div></div>`;
+    }
+    div.innerHTML = innerContent + `<span class="icon-label">${ic.name}</span><span class="del-btn">✕</span><span class="edit-btn">${editBtnSvg()}</span>`;
+    div.querySelector('.del-btn').addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); deleteItem(ic.id); });
+    div.querySelector('.edit-btn').addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); openEditModal(ic.id); });
+    div.addEventListener('click', e => { if (editMode) return; openFolderPopup(ic, div); });
+    if (editMode) { attachDesktopDrag(div, ic.id); }
+    return div;
+}
+
+function renderDock() {
+    const dock = document.getElementById('dock');
+    dock.innerHTML = '';
+    state.icons.filter(ic => ic.dock && ic.type === 'app').forEach((ic, i) => {
+        const a = document.createElement('a');
+        a.className = 'dock-icon'; a.href = ic.url; a.target = '_blank'; a.title = ic.name;
+        a.dataset.id = ic.id;
+        a.style.background = grad(ic.color);
+        a.innerHTML = svg(ic.icon || 'globe');
+        if (editMode) { attachDockDrag(a, ic.id); }
+        dock.appendChild(a);
+    });
+}
+
+function renderMenuList() {
+    const list = document.getElementById('menu-app-list'); list.innerHTML = '';
+    // Render normal icons
+    state.icons.forEach(ic => {
+        const el = document.createElement(ic.type === 'app' ? 'a' : 'div');
+        el.className = 'menu-item';
+        if (ic.type === 'app') { el.href = ic.url; el.target = '_blank'; }
+        const isPinned = ic.dock && ic.type === 'app';
+        const pinBtn = ic.type === 'app' ? `<button class="pin-btn${isPinned ? ' pinned' : ''}" title="${isPinned ? 'Dock\'tan kaldır' : 'Dock\'a sabitle'}" data-id="${ic.id}" onclick="togglePin(event,'${ic.id}')">${pinSvg()}</button>` : '';
+        el.innerHTML = `<div class="menu-item-left">${makeBg({ ...ic }, '28px', '28px', '7px')}<span class="mi-label">${ic.name}</span></div>${pinBtn}`;
+        if (ic.type === 'folder') { el.onclick = () => { openFolderPopup(ic, el); toggleStart(); }; }
+        list.appendChild(el);
+    });
+    // If notepad was removed from desktop, show re-add option
+    if (!state.icons.find(x => x.id === NOTEPAD_ID)) {
+        const el = document.createElement('div');
+        el.className = 'menu-item';
+        el.innerHTML = `<div class="menu-item-left">${makeBg(NOTEPAD_ITEM, '28px', '28px', '7px')}<span class="mi-label">${NOTEPAD_ITEM.name}</span></div><button class="pin-btn" title="Masaüstüne ekle" onclick="addNotepadToDesktop(event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>`;
+        el.addEventListener('click', () => { window.open(NOTEPAD_ITEM.url, '_blank'); toggleStart(); });
+        list.appendChild(el);
+    }
+}
+
+function addNotepadToDesktop(e) {
+    e.preventDefault(); e.stopPropagation();
+    if (!state.icons.find(x => x.id === NOTEPAD_ID)) {
+        state.icons.push({ ...NOTEPAD_ITEM });
+        save(); renderAll();
+        showToast('📝 Not Defteri masaüstüne eklendi');
+    }
+}
+
+function pinSvg() {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17v5"/><path d="M5 17h14"/><path d="m15 5-3 3-3-3"/><path d="M9 3h6"/><rect x="8" y="5" width="8" height="8" rx="1"/></svg>`;
+}
+
+// ═══════════════════════════════════════
+// PIN
+// ═══════════════════════════════════════
+function togglePin(e, id) {
+    e.preventDefault(); e.stopPropagation();
+    const ic = state.icons.find(x => x.id === id);
+    if (!ic || ic.type !== 'app') return;
+    ic.dock = !ic.dock;
+    save(); renderDock(); renderMenuList();
+    showToast(ic.dock ? `📌 ${ic.name} dock'a eklendi` : `✖ ${ic.name} dock'tan kaldırıldı`);
+}
+
+// ═══════════════════════════════════════
+// DRAG & DROP — Desktop
+// ═══════════════════════════════════════
+let dragSrcId = null;
+function attachDesktopDrag(el, id) {
+    el.draggable = true;
+    el.addEventListener('dragstart', e => {
+        dragSrcId = id;
+        el.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    el.addEventListener('dragover', e => {
+        e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+        el.classList.add('drag-over');
+    });
+    el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+    el.addEventListener('drop', e => {
+        e.preventDefault(); el.classList.remove('drag-over');
+        if (dragSrcId === id) return;
+        const from = state.icons.findIndex(x => x.id === dragSrcId);
+        const to = state.icons.findIndex(x => x.id === id);
+        if (from < 0 || to < 0) return;
+        const [moved] = state.icons.splice(from, 1);
+        state.icons.splice(to, 0, moved);
+        save(); renderAll();
+    });
+}
+
+// ═══════════════════════════════════════
+// DRAG & DROP — Dock
+// ═══════════════════════════════════════
+let dockDragId = null;
+function attachDockDrag(el, id) {
+    el.draggable = true;
+    el.addEventListener('dragstart', e => {
+        dockDragId = id;
+        el.classList.add('dock-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    });
+    el.addEventListener('dragend', () => el.classList.remove('dock-dragging'));
+    el.addEventListener('dragover', e => {
+        e.preventDefault(); el.classList.add('dock-drag-over');
+    });
+    el.addEventListener('dragleave', () => el.classList.remove('dock-drag-over'));
+    el.addEventListener('drop', e => {
+        e.preventDefault(); el.classList.remove('dock-drag-over');
+        if (dockDragId === id) return;
+        // reorder in main icons list (dock order = filter order)
+        const from = state.icons.findIndex(x => x.id === dockDragId);
+        const to = state.icons.findIndex(x => x.id === id);
+        if (from < 0 || to < 0) return;
+        const [moved] = state.icons.splice(from, 1);
+        state.icons.splice(to, 0, moved);
+        save(); renderAll();
+    });
+}
+
+// ═══════════════════════════════════════
+// FOLDER POPUP
+// ═══════════════════════════════════════
+let activeFolderId = null;
+function openFolderPopup(folder, anchor) {
+    activeFolderId = folder.id;
+    document.getElementById('fp-title').textContent = folder.name;
+    const items = folder.items || [];
+    document.getElementById('fp-count').textContent = items.length + ' uygulama';
+    const grid = document.getElementById('fp-grid'); grid.innerHTML = '';
+    items.forEach(ic => {
+        const a = document.createElement('a');
+        a.className = 'fp-icon'; a.href = ic.url; a.target = '_blank';
+        a.innerHTML = makeBg(ic, '44px', '44px', '11px') + `<span class="icon-label">${ic.name}</span><span class="del-btn" style="top:0;right:0;">✕</span><span class="edit-btn" style="top:18px;right:0;">${editBtnSvg()}</span>`;
+        a.querySelector('.del-btn').addEventListener('click', ev => { ev.preventDefault(); ev.stopPropagation(); deleteFolderItem(folder.id, ic.id); });
+        a.querySelector('.edit-btn').addEventListener('click', ev => { ev.preventDefault(); ev.stopPropagation(); openEditModal(ic.id, folder.id); });
+        a.addEventListener('click', ev => {
+            if (editMode) { ev.preventDefault(); return; }
+            // Close folder popup when navigating
+            closePopup();
+        });
+        grid.appendChild(a);
+    });
+    const add = document.createElement('div'); add.className = 'fp-add';
+    add.innerHTML = `<div class="fp-add-circle">+</div><span class="icon-label" style="color:var(--tx2)">Ekle</span>`;
+    add.onclick = () => { closePopup(); openAddModal(folder.id); };
+    grid.appendChild(add);
+
+    const popup = document.getElementById('folder-popup');
+    popup.classList.add('open');
+    const pw = Math.min(340, window.innerWidth * .9);
+    const rect = anchor.getBoundingClientRect();
+    let left = rect.left, top = rect.bottom + 8;
+    if (left + pw > window.innerWidth - 10) left = window.innerWidth - pw - 10;
+    if (top + 320 > window.innerHeight - 62) top = rect.top - 320 - 8;
+    if (left < 8) left = 8; if (top < 8) top = 8;
+    popup.style.left = left + 'px'; popup.style.top = top + 'px'; popup.style.width = pw + 'px';
+}
+function deleteFolderItem(fid, iid) {
+    const f = state.icons.find(x => x.id === fid);
+    if (f) f.items = (f.items || []).filter(x => x.id !== iid);
+    save(); renderAll();
+    const el = document.querySelector(`[data-id="${fid}"]`);
+    if (el) openFolderPopup(f, el);
+    showToast('🗑️ Silindi');
+}
+function closePopup() { document.getElementById('folder-popup').classList.remove('open'); activeFolderId = null; }
+document.addEventListener('click', e => {
+    const fp = document.getElementById('folder-popup');
+    if (fp.classList.contains('open') && !fp.contains(e.target) && !e.target.closest('.folder-icon')) closePopup();
+});
+
+// ═══════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════
+function tick() {
+    const n = new Date();
+    document.getElementById('clock').textContent = String(n.getHours()).padStart(2, '0') + ':' + String(n.getMinutes()).padStart(2, '0');
+    const D = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'], M = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+    document.getElementById('date-disp').textContent = `${D[n.getDay()]} ${n.getDate()} ${M[n.getMonth()]}`;
+}
+tick(); setInterval(tick, 15000);
+
+// ═══════════════════════════════════════
+// START MENU
+// ═══════════════════════════════════════
+function toggleStart() { document.getElementById('start-menu').classList.toggle('open'); closeCtx(); }
+document.addEventListener('click', e => {
+    const sm = document.getElementById('start-menu'), sb = document.getElementById('start-btn');
+    if (!sm.contains(e.target) && !sb.contains(e.target)) sm.classList.remove('open');
+});
+
+// ═══════════════════════════════════════
+// CONTEXT MENU
+// ═══════════════════════════════════════
+function showCtxMenu(e) {
+    e.preventDefault();
+    const m = document.getElementById('ctx-menu');
+    m.style.left = Math.min(e.clientX, window.innerWidth - 215) + 'px';
+    m.style.top = Math.min(e.clientY, window.innerHeight - 170) + 'px';
+    m.classList.add('open');
+}
+function closeCtx() { document.getElementById('ctx-menu').classList.remove('open'); }
+document.addEventListener('click', () => closeCtx());
+
+// ═══════════════════════════════════════
+// EDIT MODE
+// ═══════════════════════════════════════
+let editMode = false;
+function toggleEditMode() {
+    editMode = !editMode;
+    document.body.classList.toggle('edit-mode', editMode);
+    document.getElementById('edit-label').textContent = editMode ? 'Düzenlemeyi Bitir' : 'İkonları Düzenle';
+    renderAll(); // re-render to attach drag listeners
+    showToast(editMode ? '✏️ Sürükle-bırak ile sırala, ✕ ile sil' : '✅ Düzenleme bitti');
+}
+function deleteItem(id) {
+    state.icons = state.icons.filter(x => x.id !== id);
+    save(); renderAll();
+    if (id === NOTEPAD_ID) {
+        showToast('📝 Masaüstünden kaldırıldı (Menüden tekrar ekleyebilirsiniz)');
+    } else {
+        showToast('🗑️ Silindi');
+    }
+}
+
+// ═══════════════════════════════════════
+// ADD MODAL
+// ═══════════════════════════════════════
+let addTargetFolderId = null, currentType = 'app', selIconKey = 'globe', selViewMode = 'transparent';
+let editingItemId = null, editingFolderId = null;
+
+function setType(t) {
+    currentType = t;
+    document.getElementById('type-app-btn').classList.toggle('active', t === 'app');
+    document.getElementById('type-folder-btn').classList.toggle('active', t === 'folder');
+    document.getElementById('url-field').style.display = t === 'folder' ? 'none' : '';
+    const vmField = document.getElementById('view-mode-field');
+    vmField.classList.toggle('visible', t === 'folder');
+    if (!editingItemId) {
+        document.getElementById('add-modal-title').textContent = t === 'folder' ? 'Yeni Klasör' : 'Yeni Uygulama';
+    }
+}
+
+function setViewMode(vm) {
+    selViewMode = vm;
+    document.getElementById('vm-transparent-btn').classList.toggle('active', vm === 'transparent');
+    document.getElementById('vm-icon-btn').classList.toggle('active', vm === 'icon');
+}
+
+function buildIconPicker() {
+    const g = document.getElementById('icon-picker'); g.innerHTML = '';
+    IK.forEach(k => {
+        const d = document.createElement('div');
+        d.className = 'ip-opt' + (k === selIconKey ? ' selected' : '');
+        d.innerHTML = svg(k, 'rgba(230,237,243,.75)', '20px', '20px'); d.title = k;
+        d.onclick = () => { selIconKey = k; document.querySelectorAll('.ip-opt').forEach(x => x.classList.remove('selected')); d.classList.add('selected'); };
+        g.appendChild(d);
+    });
+}
+
+function openAddModal(folderId = null, forceType = null) {
+    editingItemId = null; editingFolderId = null;
+    addTargetFolderId = folderId;
+    const inFolder = folderId !== null;
+    document.getElementById('type-toggle').style.display = inFolder ? 'none' : '';
+    setType(forceType || (inFolder ? 'app' : 'app'));
+    selIconKey = 'globe'; buildIconPicker();
+    selViewMode = 'transparent'; setViewMode('transparent');
+    document.getElementById('i-name').value = '';
+    document.getElementById('i-url').value = '';
+    document.getElementById('i-color').value = '#c62828,#e53935';
+    document.getElementById('add-confirm-btn').textContent = 'Ekle';
+    document.getElementById('add-modal').classList.add('open');
+    setTimeout(() => document.getElementById('i-name').focus(), 250);
+}
+
+function openEditModal(itemId, folderId = null) {
+    editingItemId = itemId; editingFolderId = folderId;
+    let item;
+    if (folderId) {
+        const f = state.icons.find(x => x.id === folderId);
+        item = f && (f.items || []).find(x => x.id === itemId);
+    } else {
+        item = state.icons.find(x => x.id === itemId);
+    }
+    if (!item) return;
+    addTargetFolderId = folderId;
+    document.getElementById('type-toggle').style.display = 'none';
+    currentType = item.type;
+    document.getElementById('url-field').style.display = item.type === 'folder' ? 'none' : '';
+    const vmField = document.getElementById('view-mode-field');
+    vmField.classList.toggle('visible', item.type === 'folder');
+    document.getElementById('add-modal-title').textContent = item.type === 'folder' ? 'Klasörü Düzenle' : 'Uygulamayı Düzenle';
+    selIconKey = item.icon || 'globe'; buildIconPicker();
+    selViewMode = item.viewMode || 'transparent'; setViewMode(selViewMode);
+    document.getElementById('i-name').value = item.name;
+    document.getElementById('i-url').value = item.url || '';
+    // Set color dropdown
+    const colorSel = document.getElementById('i-color');
+    const colorOpts = Array.from(colorSel.options);
+    const matchOpt = colorOpts.find(o => o.value === item.color);
+    if (matchOpt) colorSel.value = item.color;
+    document.getElementById('add-confirm-btn').textContent = 'Kaydet';
+    document.getElementById('add-modal').classList.add('open');
+    setTimeout(() => document.getElementById('i-name').focus(), 250);
+}
+
+function closeAddModal() {
+    document.getElementById('add-modal').classList.remove('open');
+    editingItemId = null; editingFolderId = null;
+}
+
+function confirmAdd() {
+    const name = document.getElementById('i-name').value.trim();
+    let url = document.getElementById('i-url').value.trim();
+    const colorVal = document.getElementById('i-color').value;
+    if (!name) { showToast('⚠️ İsim gerekli'); return; }
+    if (currentType === 'app' && !url) { showToast('⚠️ URL gerekli'); return; }
+    if (currentType === 'app' && !url.startsWith('http')) url = 'https://' + url;
+
+    // EDIT MODE
+    if (editingItemId) {
+        let item;
+        if (editingFolderId) {
+            const f = state.icons.find(x => x.id === editingFolderId);
+            item = f && (f.items || []).find(x => x.id === editingItemId);
+        } else {
+            item = state.icons.find(x => x.id === editingItemId);
+        }
+        if (item) {
+            item.name = name;
+            item.icon = selIconKey;
+            item.color = colorVal;
+            if (item.type === 'app') item.url = url;
+            if (item.type === 'folder') item.viewMode = selViewMode;
+        }
+        save(); renderAll(); closeAddModal();
+        // Re-open folder popup if editing inside folder
+        if (editingFolderId) {
+            const f = state.icons.find(x => x.id === editingFolderId);
+            const el = document.querySelector(`[data-id="${editingFolderId}"]`);
+            if (f && el) setTimeout(() => openFolderPopup(f, el), 150);
+        }
+        showToast('✅ ' + name + ' güncellendi');
+        return;
+    }
+
+    // ADD MODE
+    const id = 'ic_' + Date.now();
+    const item = { id, type: currentType, name, icon: selIconKey, color: colorVal };
+    if (currentType === 'app') { item.url = url; item.dock = false; }
+    if (currentType === 'folder') { item.items = []; item.dock = false; item.viewMode = selViewMode; }
+    if (addTargetFolderId) {
+        const f = state.icons.find(x => x.id === addTargetFolderId);
+        if (f) f.items = [...(f.items || []), item];
+    } else {
+        state.icons.push(item);
+    }
+    save(); renderAll(); closeAddModal();
+    if (addTargetFolderId) {
+        const f = state.icons.find(x => x.id === addTargetFolderId);
+        const el = document.querySelector(`[data-id="${addTargetFolderId}"]`);
+        if (f && el) setTimeout(() => openFolderPopup(f, el), 150);
+    }
+    showToast('✅ ' + name + ' eklendi');
+}
+
+// ═══════════════════════════════════════
+// WALLPAPER
+// ═══════════════════════════════════════
+const WPS = [
+    { n: 'Gece', s: 'radial-gradient(ellipse 70% 50% at 15% 85%,rgba(88,166,255,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 85% 15%,rgba(88,166,255,.05) 0%,transparent 60%),linear-gradient(160deg,#0d1117 0%,#111827 50%,#0d1117 100%)' },
+    { n: 'Alacakaranlık', s: 'radial-gradient(ellipse at 30% 60%,#2d0a3f 0%,transparent 60%),radial-gradient(ellipse at 70% 30%,#0d1b4b 0%,transparent 60%),linear-gradient(135deg,#150a25,#2d0a3f,#0d1b4b)' },
+    { n: 'Orman', s: 'radial-gradient(ellipse at 40% 70%,#0a2e1a 0%,transparent 55%),radial-gradient(ellipse at 70% 30%,#143d25 0%,transparent 55%),linear-gradient(135deg,#050e08,#0f3320,#050e08)' },
+    { n: 'Volkan', s: 'radial-gradient(ellipse at 50% 80%,#4a1000 0%,transparent 50%),radial-gradient(ellipse at 30% 40%,#1a0a00 0%,transparent 50%),linear-gradient(135deg,#120300,#3d0f00,#120300)' },
+    { n: 'Çelik', s: 'radial-gradient(ellipse at 30% 30%,#1a3a5c 0%,transparent 55%),radial-gradient(ellipse at 70% 70%,#0d2137 0%,transparent 55%),linear-gradient(135deg,#0a1628,#1e3a5f,#0a1628)' },
+    { n: 'Altın', s: 'radial-gradient(ellipse at 40% 40%,#4a3800 0%,transparent 55%),radial-gradient(ellipse at 70% 60%,#2a2000 0%,transparent 55%),linear-gradient(135deg,#120d00,#4a3800,#120d00)' },
+    { n: 'Mor', s: 'radial-gradient(ellipse at 30% 50%,#1e0a4a 0%,transparent 55%),radial-gradient(ellipse at 70% 30%,#0f0520 0%,transparent 55%),linear-gradient(135deg,#080210,#1e0a4a,#080210)' },
+    { n: 'Gün Batımı', s: 'radial-gradient(ellipse at 50% 90%,#5c1900 0%,transparent 50%),radial-gradient(ellipse at 30% 40%,#8b3a0a 0%,transparent 50%),linear-gradient(180deg,#0d1117 0%,#5c1900 70%)' },
+    { n: 'Okyanus', s: 'radial-gradient(ellipse at 30% 60%,#002244 0%,transparent 55%),radial-gradient(ellipse at 70% 40%,#003366 0%,transparent 55%),linear-gradient(135deg,#001122,#003366,#001122)' },
+];
+let selWp = 0;
+function buildWpGrid() {
+    const g = document.getElementById('wp-grid'); g.innerHTML = '';
+    WPS.forEach((wp, i) => {
+        const d = document.createElement('div');
+        d.className = 'wp-opt' + (wp.s === state.wallpaper ? ' selected' : '');
+        d.style.background = wp.s; d.title = wp.n;
+        if (wp.s === state.wallpaper) selWp = i;
+        d.onclick = () => { selWp = i; document.querySelectorAll('.wp-opt').forEach(x => x.classList.remove('selected')); d.classList.add('selected'); };
+        g.appendChild(d);
+    });
+}
+function openWpModal() { buildWpGrid(); document.getElementById('wp-modal').classList.add('open'); }
+function closeWpModal() { document.getElementById('wp-modal').classList.remove('open'); }
+function applyWp() {
+    state.wallpaper = WPS[selWp].s; save();
+    document.getElementById('wp').style.background = state.wallpaper;
+    closeWpModal(); showToast('🖼️ Duvar kağıdı güncellendi');
+}
+document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+let tt;
+function showToast(msg) {
+    const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+renderAll();

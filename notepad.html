@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Not Defteri</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        :root {
+            --bg:#0d1117; --s1:rgba(255,255,255,.05); --s2:rgba(255,255,255,.09);
+            --b1:rgba(255,255,255,.1); --b2:rgba(255,255,255,.18);
+            --tx:#e6edf3; --tx2:rgba(230,237,243,.5); --ac:#58a6ff; --red:#f85149;
+            --sh:0 8px 32px rgba(0,0,0,.65);
+        }
+        body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--tx); height:100vh; display:flex; overflow:hidden; }
+
+        /* Sidebar */
+        #sidebar {
+            width:280px; min-width:280px; height:100vh; background:rgba(13,17,23,.97);
+            border-right:1px solid var(--b1); display:flex; flex-direction:column; z-index:10;
+        }
+        #sidebar-header {
+            padding:18px 16px 12px; display:flex; align-items:center; justify-content:space-between;
+            border-bottom:1px solid var(--b1);
+        }
+        #sidebar-header h2 { font-size:16px; font-weight:600; }
+        .header-actions { display:flex; gap:6px; }
+        .icon-btn {
+            width:32px; height:32px; border-radius:8px; border:none; background:transparent;
+            color:var(--tx2); cursor:pointer; display:flex; align-items:center; justify-content:center;
+            transition:background .12s, color .12s;
+        }
+        .icon-btn:hover { background:var(--s2); color:var(--tx); }
+        .icon-btn svg { width:16px; height:16px; }
+
+        #search-box {
+            padding:8px 16px;
+        }
+        #search-input {
+            width:100%; background:rgba(255,255,255,.06); border:1px solid var(--b1); border-radius:9px;
+            padding:8px 12px; color:var(--tx); font-family:'DM Sans',sans-serif; font-size:13px; outline:none;
+            transition:border-color .13s;
+        }
+        #search-input:focus { border-color:rgba(88,166,255,.55); }
+
+        #note-list {
+            flex:1; overflow-y:auto; padding:6px 8px; scrollbar-width:thin;
+            scrollbar-color:var(--b1) transparent;
+        }
+        .note-item {
+            padding:10px 12px; border-radius:10px; cursor:pointer; margin-bottom:2px;
+            border:1px solid transparent; transition:background .12s, border-color .12s;
+        }
+        .note-item:hover { background:var(--s2); }
+        .note-item.active { background:rgba(88,166,255,.1); border-color:rgba(88,166,255,.3); }
+        .note-item-title { font-size:13px; font-weight:600; margin-bottom:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .note-item-preview { font-size:11px; color:var(--tx2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .note-item-date { font-size:10px; color:var(--tx2); margin-top:3px; opacity:.7; }
+
+        .empty-state {
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            height:100%; color:var(--tx2); text-align:center; padding:20px;
+        }
+        .empty-state svg { width:48px; height:48px; margin-bottom:12px; opacity:.4; }
+        .empty-state p { font-size:13px; }
+
+        /* Editor */
+        #editor-area {
+            flex:1; display:flex; flex-direction:column; height:100vh;
+        }
+        #editor-toolbar {
+            padding:12px 20px; display:flex; align-items:center; justify-content:space-between;
+            border-bottom:1px solid var(--b1); min-height:54px;
+        }
+        #note-title-input {
+            background:transparent; border:none; color:var(--tx); font-family:'DM Sans',sans-serif;
+            font-size:16px; font-weight:600; outline:none; flex:1; min-width:0;
+        }
+        #note-title-input::placeholder { color:var(--tx2); }
+        .toolbar-actions { display:flex; gap:6px; align-items:center; flex-shrink:0; }
+        #char-count { font-size:11px; color:var(--tx2); margin-right:8px; }
+
+        #note-content {
+            flex:1; resize:none; background:transparent; border:none; color:var(--tx);
+            font-family:'DM Sans',sans-serif; font-size:14px; line-height:1.7; padding:20px 24px;
+            outline:none; scrollbar-width:thin; scrollbar-color:var(--b1) transparent;
+        }
+        #note-content::placeholder { color:var(--tx2); }
+
+        #no-note-selected {
+            flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+            color:var(--tx2); text-align:center;
+        }
+        #no-note-selected svg { width:64px; height:64px; margin-bottom:16px; opacity:.25; }
+        #no-note-selected p { font-size:14px; }
+
+        /* Delete confirm */
+        .delete-confirm {
+            position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:500;
+            display:none; align-items:center; justify-content:center; backdrop-filter:blur(6px);
+        }
+        .delete-confirm.open { display:flex; }
+        .delete-box {
+            background:rgba(13,17,23,.99); border:1px solid var(--b2); border-radius:16px;
+            padding:24px; width:min(360px,90vw); box-shadow:var(--sh); text-align:center;
+        }
+        .delete-box h3 { font-size:15px; margin-bottom:8px; }
+        .delete-box p { font-size:13px; color:var(--tx2); margin-bottom:18px; }
+        .delete-box-actions { display:flex; gap:10px; }
+        .dbtn { flex:1; padding:10px; border-radius:10px; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; transition:opacity .13s; }
+        .dbtn-cancel { background:var(--s1); color:var(--tx2); }
+        .dbtn-cancel:hover { background:var(--s2); }
+        .dbtn-delete { background:var(--red); color:#fff; }
+        .dbtn-delete:hover { opacity:.85; }
+
+        /* Mobile sidebar toggle */
+        #mobile-toggle {
+            display:none; position:fixed; top:10px; left:10px; z-index:20;
+            width:36px; height:36px; border-radius:9px; border:1px solid var(--b1);
+            background:rgba(13,17,23,.9); color:var(--tx); cursor:pointer;
+            align-items:center; justify-content:center; backdrop-filter:blur(12px);
+        }
+        #mobile-toggle svg { width:18px; height:18px; }
+
+        /* Back button */
+        #back-btn {
+            display:flex; align-items:center; gap:6px; padding:7px 10px; border-radius:8px;
+            border:none; background:transparent; color:var(--tx2); cursor:pointer;
+            font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500;
+            transition:background .12s, color .12s; text-decoration:none; margin:8px 8px 0;
+        }
+        #back-btn:hover { background:var(--s2); color:var(--tx); }
+        #back-btn svg { width:14px; height:14px; }
+
+        /* Toast */
+        #toast {
+            position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+            background:rgba(22,30,46,.97); border:1px solid var(--b2); color:var(--tx);
+            font-size:13px; font-weight:500; padding:9px 18px; border-radius:30px; z-index:600;
+            opacity:0; pointer-events:none; transition:opacity .2s; white-space:nowrap;
+            box-shadow:0 4px 20px rgba(0,0,0,.5);
+        }
+        #toast.show { opacity:1; }
+
+        @media(max-width:640px) {
+            #sidebar { position:fixed; left:-290px; transition:left .25s ease; z-index:100; }
+            #sidebar.open { left:0; }
+            #mobile-toggle { display:flex; }
+            .sidebar-backdrop {
+                position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:90;
+                display:none;
+            }
+            .sidebar-backdrop.show { display:block; }
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-toggle" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+    </div>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
+    <div id="sidebar">
+        <a id="back-btn" href="index3.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Masaüstüne Dön
+        </a>
+        <div id="sidebar-header">
+            <h2>📝 Notlarım</h2>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="createNote()" title="Yeni Not">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="search-box">
+            <input type="text" id="search-input" placeholder="Not ara..." oninput="renderNoteList()">
+        </div>
+        <div id="note-list"></div>
+    </div>
+
+    <div id="editor-area">
+        <div id="no-note-selected">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/>
+            </svg>
+            <p>Bir not seçin veya yeni bir not oluşturun</p>
+        </div>
+        <div id="editor-view" style="display:none;flex:1;flex-direction:column;">
+            <div id="editor-toolbar">
+                <input type="text" id="note-title-input" placeholder="Başlık..." oninput="saveCurrentNote()">
+                <div class="toolbar-actions">
+                    <span id="char-count">0 karakter</span>
+                    <button class="icon-btn" onclick="confirmDeleteNote()" title="Notu Sil" style="color:var(--red);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <textarea id="note-content" placeholder="Yazmaya başlayın..." oninput="saveCurrentNote()"></textarea>
+        </div>
+    </div>
+
+    <div class="delete-confirm" id="delete-confirm">
+        <div class="delete-box">
+            <h3>Notu Sil</h3>
+            <p>Bu notu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</p>
+            <div class="delete-box-actions">
+                <button class="dbtn dbtn-cancel" onclick="closeDeleteConfirm()">İptal</button>
+                <button class="dbtn dbtn-delete" onclick="deleteCurrentNote()">Sil</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+        const NOTES_KEY = 'masaustu_notes_v1';
+        let notes = [];
+        let activeNoteId = null;
+        let saveTimer = null;
+
+        function loadNotes() {
+            try { const r = localStorage.getItem(NOTES_KEY); if (r) notes = JSON.parse(r); } catch(e) {}
+        }
+        function saveNotes() {
+            try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); } catch(e) {}
+        }
+
+        function createNote() {
+            const note = {
+                id: 'n_' + Date.now(),
+                title: '',
+                content: '',
+                created: Date.now(),
+                updated: Date.now()
+            };
+            notes.unshift(note);
+            saveNotes();
+            selectNote(note.id);
+            renderNoteList();
+            document.getElementById('note-title-input').focus();
+            closeSidebarMobile();
+        }
+
+        function selectNote(id) {
+            activeNoteId = id;
+            const note = notes.find(n => n.id === id);
+            if (!note) return;
+            document.getElementById('no-note-selected').style.display = 'none';
+            const ev = document.getElementById('editor-view');
+            ev.style.display = 'flex';
+            document.getElementById('note-title-input').value = note.title;
+            document.getElementById('note-content').value = note.content;
+            updateCharCount();
+            renderNoteList();
+        }
+
+        function saveCurrentNote() {
+            if (!activeNoteId) return;
+            const note = notes.find(n => n.id === activeNoteId);
+            if (!note) return;
+            note.title = document.getElementById('note-title-input').value;
+            note.content = document.getElementById('note-content').value;
+            note.updated = Date.now();
+            updateCharCount();
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => { saveNotes(); renderNoteList(); }, 400);
+        }
+
+        function updateCharCount() {
+            const content = document.getElementById('note-content').value;
+            document.getElementById('char-count').textContent = content.length + ' karakter';
+        }
+
+        function confirmDeleteNote() {
+            if (!activeNoteId) return;
+            document.getElementById('delete-confirm').classList.add('open');
+        }
+        function closeDeleteConfirm() {
+            document.getElementById('delete-confirm').classList.remove('open');
+        }
+        function deleteCurrentNote() {
+            notes = notes.filter(n => n.id !== activeNoteId);
+            activeNoteId = null;
+            saveNotes();
+            document.getElementById('editor-view').style.display = 'none';
+            document.getElementById('no-note-selected').style.display = 'flex';
+            renderNoteList();
+            closeDeleteConfirm();
+            showToast('🗑️ Not silindi');
+        }
+
+        function renderNoteList() {
+            const list = document.getElementById('note-list');
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = notes.filter(n => {
+                const title = (n.title || 'İsimsiz Not').toLowerCase();
+                const content = (n.content || '').toLowerCase();
+                return title.includes(query) || content.includes(query);
+            });
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    <p>${query ? 'Sonuç bulunamadı' : 'Henüz not yok<br>+ butonuna tıklayarak başlayın'}</p>
+                </div>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map(n => {
+                const title = n.title || 'İsimsiz Not';
+                const preview = n.content ? n.content.substring(0, 60) : 'Boş not';
+                const date = new Date(n.updated);
+                const dateStr = date.toLocaleDateString('tr-TR', { day:'numeric', month:'short' }) + ' ' + date.toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
+                return `<div class="note-item${n.id === activeNoteId ? ' active' : ''}" onclick="selectNote('${n.id}');closeSidebarMobile();">
+                    <div class="note-item-title">${escHtml(title)}</div>
+                    <div class="note-item-preview">${escHtml(preview)}</div>
+                    <div class="note-item-date">${dateStr}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function escHtml(s) {
+            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        // Sidebar mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebar-backdrop').classList.toggle('show');
+        }
+        function closeSidebarMobile() {
+            if (window.innerWidth <= 640) {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebar-backdrop').classList.remove('show');
+            }
+        }
+
+        // Toast
+        let tt;
+        function showToast(msg) {
+            const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+            clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        // Init
+        loadNotes();
+        renderNoteList();
+        // Auto-select first note if exists
+        if (notes.length > 0) selectNote(notes[0].id);
+    </script>
+</body>
+</html>
