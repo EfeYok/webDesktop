@@ -12,6 +12,7 @@ __    __     _      ___            _    _
 ```
 
 **Tarayıcında çalışan, tamamen özelleştirilebilir bir masaüstü deneyimi.**
+*Henüz hâlâ geliştirilmekte*
 
 [![Live Demo](https://img.shields.io/badge/🌐_Canlı_Demo-web--desktop--theta.vercel.app-4a9eff?style=for-the-badge)](https://web-desktop-theta.vercel.app)
 ![HTML](https://img.shields.io/badge/HTML-24.3%25-e34c26?style=for-the-badge&logo=html5&logoColor=white)
